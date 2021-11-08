@@ -25,7 +25,7 @@ passport.use(
       callbackURL: "/auth/google/callback",
       proxy: true,
     },
-    async (accessToken, refreshToken, profile, done) => {
+    (accessToken, refreshToken, profile, done) => {
       // console.log(accessToken);
       // could be a possible instance
       User.findOne({ googleId: profile.id }).then((user) => {

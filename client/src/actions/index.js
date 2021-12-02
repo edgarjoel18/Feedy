@@ -1,6 +1,6 @@
 import axios from "axios";
 import { FETCH_USER, FETCH_SURVEYS } from "./types";
-
+// comments needed
 export const fetchUser = () => {
   // using redux thunk with this action creator. Instead of immediately returning an action with this action
   // creator like this

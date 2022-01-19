@@ -2,6 +2,7 @@ const _ = require("lodash");
 const { Path } = require("path-parser");
 const { URL } = require("url");
 const mongoose = require("mongoose");
+const { ObjectId } = require("mongodb");
 const requireLogin = require("../middlewares/requireLogin");
 const requireCredits = require("../middlewares/requireCredits");
 const Mailer = require("../services/Mailer");
@@ -24,8 +25,23 @@ module.exports = (app) => {
 
   app.post("/api/surveys/webhooks", (req, res) => {
     // now get the survey id and the choice
+    // const events = _.map(req.body, (event) => {
+    //   const pathname = new URL(event.url).pathname;
+    //   const p = new Path("/api/surveys/:surveyId/:choice");
+    //   const match = p.test(pathname);
+    //   if (match) {
+    //     return {
+    //       email: event.email,
+    //       surveyId: match.surveyId,
+    //       choice: match.choice,
+    //     };
+    //   }
+    // });
+    // const compactEvents = _.compact(events);
+    // const uniqueEvents = _uniqBy(compactEvents, 'email', 'surveyId');
     const p = new Path("/api/surveys/:surveyId/:choice");
-
+    const objectId = require("mongodb").ObjectId;
+    console.log("reached");
     _.chain(req.body)
       .map(({ email, url }) => {
         const match = p.test(new URL(url).pathname);
@@ -38,7 +54,7 @@ module.exports = (app) => {
       .each(({ surveyId, email, choice }) => {
         Survey.updateOne(
           {
-            _id: surveyId,
+            _id: new ObjectId(surveyId),
             recipients: {
               $elemMatch: { email: email, responded: false },
             },
@@ -62,7 +78,9 @@ module.exports = (app) => {
       title,
       subject,
       body,
-      recipients: recipients.split(",").map((email) => ({ email })),
+      recipients: recipients
+        .split(",")
+        .map((email) => ({ email: email.trim() })),
       _user: req.user.id,
       dateSent: Date.now(),
     });

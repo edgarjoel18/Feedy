@@ -42,7 +42,7 @@ class Header extends Component {
             className="left brand-logo"
             style={{ marginLeft: 10 }}
           >
-            Feedy2
+            Feedy
           </Link>
           <ul className="right">{this.renderContent()}</ul>
         </div>

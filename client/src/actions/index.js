@@ -1,5 +1,5 @@
 import axios from "axios";
-import { FETCH_USER } from "./types";
+import { FETCH_USER, FETCH_SURVEYS } from "./types";
 
 export const fetchUser = () => {
   console.log("CALLED");
@@ -10,10 +10,12 @@ export const fetchUser = () => {
   };
 };
 
-export const submitForm = (data) => {
+export const submitForm = (data, history) => {
   return async (dispatch) => {
     const res = await axios.post("/api/surveys", data);
-    // dispatch({ type: FETCH_USER, payload: res.data });
+    history.push("/surveys");
+    dispatch({ type: FETCH_USER, payload: res.data });
+
   };
 };
 
@@ -23,3 +25,12 @@ export const handleToken = (token) => {
     dispatch({ type: FETCH_USER, payload: res.data });
   };
 };
+
+export const fetchSurveys = () => {
+  return async (dispatch) => {
+    const res = await axios.get("/api/surveys");
+    console.log(res.data);
+    dispatch({ type: FETCH_SURVEYS, payload: res.data });
+  }
+}
+

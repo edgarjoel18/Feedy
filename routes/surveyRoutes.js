@@ -21,7 +21,9 @@ module.exports = (app) => {
   app.get("/api/surveys/:surveyId/:choice", (req, res) => {
     res.send("Thanks for voting");
   });
+
   app.post("/api/surveys/webhooks", (req, res) => {
+    console.log(req.body);
     const p = new Path('/api/surveys/:surveyId/:choice');
 
     _.chain(req.body)
@@ -47,10 +49,10 @@ module.exports = (app) => {
             lastResponded: new Date(),
           }
         ).exec();
-      })
-      .value();
+      }).value();
 
     res.send({});
+    // console.log(req.body);
     // const events = _.map((event) => {
     //   const pathname = new URL(event.url).pathname;
     //   const p = new Path("/api/surveys/:surveyId/:choice");
@@ -63,7 +65,12 @@ module.exports = (app) => {
     //     };
     //   }
     // }); // end of events
-    // // remove undefined elements
+
+    // const compactEvents = _.compact(events);
+    // const uniqueEvents = _.uniqBy(compactEvents, "email", "surveyId");
+    // res.send({});
+
+    // remove undefined elements
     // const compactElements = _.compact(events);
     // const uniqueElements = _.uniqBy(compactElements, "email", "surveyId");
     // uniqueElements.forEach(async (element) => {
